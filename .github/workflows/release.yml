@@ -1,0 +1,32 @@
+name: Release Go Library
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: 1.23.5
+
+    - name: Verify
+      run: |
+        go mod tidy
+
+    - name: Publish Go Module
+      env:
+        GOPROXY: proxy.golang.org
+        GONOSUMDB: '*'
+      run: |
+        git fetch --tags
+        git tag | grep $(git describe --tags)
+        echo "Tag found: $(git describe --tags)"
