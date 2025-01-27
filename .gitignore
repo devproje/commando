@@ -1,4 +1,9 @@
+# IDE Settings
 .idea/
 .vscode/
 
+# Sample Temp Files
+config.json
+
+# MacOS File caches
 .DS_Store
