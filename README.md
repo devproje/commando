@@ -1,5 +1,5 @@
 # Commando
-[![GoDoc](https://godoc.org/github.com/devproje/commando?status.svg)](https://godoc.org/github.com/hashicorp/go-version)
+[![GoDoc](https://godoc.org/github.com/devproje/commando?status.svg)](https://godoc.org/github.com/devproje/commando)
 ![Build Status](https://github.com/devproje/commando/actions/workflows/release.yml/badge.svg)
 - Go 언어로 만든 간단한 Argument 파싱 & 핸들링 라이브러리 입니다!
 
