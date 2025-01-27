@@ -3,6 +3,8 @@
 
 ## Milestone
 - Short option 기능 (ex: -a, -b 등등)
+- Help Command 기능
+- 오류로그 개선
 
 ## How to use
 - 더 자세한 예제는 [example](https://github.com/devproje/commando/tree/master/example)로 가시면 확인 하실 수 있어요!
@@ -41,6 +43,7 @@ func main() {
 	})
 
 	// 입력받은 arguments를 파싱 후 핸들링
+	// Execute() 함수는 **무조건** Root를 설정 한 후에 실행 해야 합니다.
 	err := command.Execute()
 	if err != nil {
 		panic(err)
@@ -87,7 +90,8 @@ func main() {
 				return err
 			}
 
-			b, err = option.ParseInt(*n.MustGetOpt("b"), n)
+			// MustGetOpt() 함수 대신에도 Node struct 내부에 있는 Opts 배열로도 OptionData를 로딩하는게 가능 합니다.
+			b, err = option.ParseInt(n.Opts[1], n)
 			if err != nil {
 				return err
 			}
@@ -106,6 +110,7 @@ func main() {
 	})
 
 	// 입력받은 arguments를 파싱 후 핸들링
+	// Execute() 함수는 **무조건** Root 또는 Complex를 설정 한 후에 실행 해야 합니다.
 	err := command.Execute()
 	if err != nil {
 		panic(err)
