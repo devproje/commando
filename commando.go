@@ -102,7 +102,7 @@ func (c *Commando) Root(name, desc string, handler ArgHandler, options ...types.
 	})
 }
 
-func (c *Commando) ComplexRoot(name string, desc string, subNodes []Node, options ...types.OptionData) {
+func (c *Commando) ComplexRoot(name, desc string, subNodes []Node, options ...types.OptionData) {
 	c.nodes = append(c.nodes, Node{
 		Name:     name,
 		Desc:     desc,
@@ -112,7 +112,7 @@ func (c *Commando) ComplexRoot(name string, desc string, subNodes []Node, option
 	})
 }
 
-func (c *Commando) Then(name string, desc string, handler ArgHandler, options ...types.OptionData) Node {
+func (c *Commando) Then(name, desc string, handler ArgHandler, options ...types.OptionData) Node {
 	return Node{
 		Name:     name,
 		Desc:     desc,
