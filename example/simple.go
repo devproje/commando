@@ -9,38 +9,29 @@ import (
 )
 
 func main() {
+	// exclude first filename
 	command := commando.NewCommando(os.Args[1:])
-	command.Register("test", "test command", func(n *commando.Node) error {
-		name, err := option.ParseString(n.Opts[0], n)
+	command.Root("user", "print user info", func(n *commando.Node) error {
+		name, err := option.ParseString(*n.MustGetOpt("name"), n)
 		if err != nil {
 			return err
 		}
 
-		age, err := option.ParseInt(n.Opts[1], n)
+		age, err := option.ParseInt(*n.MustGetOpt("age"), n)
 		if err != nil {
 			return err
 		}
 
-		adult, err := option.ParseBool(n.Opts[2], n)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(name, age, adult)
-
+		fmt.Printf("name: %s, age: %d\n", name, age)
 		return nil
 	}, types.OptionData{
 		Name: "name",
-		Desc: "print name",
+		Desc: "print user name",
 		Type: types.STRING,
 	}, types.OptionData{
 		Name: "age",
-		Desc: "print age",
+		Desc: "print user age",
 		Type: types.INTEGER,
-	}, types.OptionData{
-		Name: "adult",
-		Desc: "print adults",
-		Type: types.BOOLEAN,
 	})
 
 	err := command.Execute()

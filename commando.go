@@ -53,12 +53,39 @@ func (c *Commando) Execute() error {
 		return fmt.Errorf("no command name: %s", cmd)
 	}
 
+	var err error
 	handler := node.Handler
 	if handler == nil {
+		if len(node.SubNodes) > 0 {
+			if len(c.args) == 1 {
+				return fmt.Errorf("no command specified: %s", c.args[0])
+			}
+
+			cmd = c.args[1]
+			for _, n := range node.SubNodes {
+				if n.Name == cmd {
+					node = &n
+					break
+				}
+			}
+
+			if node == nil {
+				return fmt.Errorf("no command name: %s", cmd)
+			}
+
+			handler = node.Handler
+			err = handler(node)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		}
+
 		return fmt.Errorf("no command handler: %s", cmd)
 	}
 
-	err := handler(node)
+	err = handler(node)
 	if err != nil {
 		return err
 	}
