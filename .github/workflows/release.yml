@@ -1,4 +1,4 @@
-name: Release Go Library
+name: Publish Library
 
 on:
   push:
