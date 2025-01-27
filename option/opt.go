@@ -2,10 +2,11 @@ package option
 
 import (
 	"fmt"
-	"github.com/devproje/commando"
-	"github.com/devproje/commando/types"
 	"strconv"
 	"strings"
+
+	"github.com/devproje/commando"
+	"github.com/devproje/commando/types"
 )
 
 func extractIndex(name string, args []string) (*int, error) {
@@ -24,12 +25,30 @@ func extractIndex(name string, args []string) (*int, error) {
 	return nil, fmt.Errorf("--%s option is not defined", name)
 }
 
+func convertFullOpt(opt types.OptionData, args []string) {
+	for i, arg := range args {
+		if strings.HasPrefix(arg, "-") && !strings.HasPrefix(arg, "--") {
+			for _, srt := range opt.Short {
+				if strings.Contains(arg, srt) {
+					args[i] = fmt.Sprintf("--%s", opt.Name)
+					break
+				}
+			}
+		}
+	}
+}
+
 func ParseString(opt types.OptionData, n *commando.Node) (string, error) {
 	if opt.Type != types.STRING {
 		return "", fmt.Errorf("--%s is not a string", opt.Name)
 	}
 
-	index, err := extractIndex(opt.Name, n.Commando.Args())
+	var args = n.Commando.Args()
+	if opt.Short != nil {
+		convertFullOpt(opt, args)
+	}
+
+	index, err := extractIndex(opt.Name, args)
 	if err != nil {
 		return "", err
 	}
@@ -48,6 +67,11 @@ func ParseString(opt types.OptionData, n *commando.Node) (string, error) {
 func ParseInt(opt types.OptionData, n *commando.Node) (int64, error) {
 	if opt.Type != types.INTEGER {
 		return 0, fmt.Errorf("--%s is not a integer", opt.Name)
+	}
+
+	var args = n.Commando.Args()
+	if opt.Short != nil {
+		convertFullOpt(opt, args)
 	}
 
 	index, err := extractIndex(opt.Name, n.Commando.Args())
@@ -76,6 +100,11 @@ func ParseFloat(opt types.OptionData, n *commando.Node) (float64, error) {
 		return 0, fmt.Errorf("--%s is not a string", opt.Name)
 	}
 
+	var args = n.Commando.Args()
+	if opt.Short != nil {
+		convertFullOpt(opt, args)
+	}
+
 	index, err := extractIndex(opt.Name, n.Commando.Args())
 	if err != nil {
 		return 0, err
@@ -100,6 +129,11 @@ func ParseFloat(opt types.OptionData, n *commando.Node) (float64, error) {
 func ParseBool(opt types.OptionData, n *commando.Node) (bool, error) {
 	if opt.Type != types.BOOLEAN {
 		return false, fmt.Errorf("--%s is not a bool", opt.Name)
+	}
+
+	var args = n.Commando.Args()
+	if opt.Short != nil {
+		convertFullOpt(opt, args)
 	}
 
 	index, err := extractIndex(opt.Name, n.Commando.Args())

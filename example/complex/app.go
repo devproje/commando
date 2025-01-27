@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/devproje/commando"
 	"github.com/devproje/commando/option"
 	"github.com/devproje/commando/types"
-	"os"
 )
 
 const FILENAME = "config.json"
@@ -81,13 +82,15 @@ func main() {
 
 			return Save(cnf)
 		}, types.OptionData{
-			Name: "name",
-			Desc: "user name",
-			Type: types.STRING,
+			Name:  "name",
+			Desc:  "user name",
+			Type:  types.STRING,
+			Short: []string{"n"},
 		}, types.OptionData{
-			Name: "age",
-			Desc: "user age",
-			Type: types.INTEGER,
+			Name:  "age",
+			Desc:  "user age",
+			Type:  types.INTEGER,
+			Short: []string{"a"},
 		}),
 		command.Then("show", "user print", func(n *commando.Node) error {
 			var name string
@@ -106,7 +109,7 @@ func main() {
 			}
 
 			if ret == nil {
-				return fmt.Errorf("User not found: %s\n", name)
+				return fmt.Errorf("User not found: %s", name)
 			}
 
 			fmt.Printf("name: %s, age: %d\n", ret.Name, ret.Age)

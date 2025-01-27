@@ -1,9 +1,10 @@
 package types
 
 type OptionData struct {
-	Name string
-	Desc string
-	Type OptionType
+	Name  string
+	Desc  string
+	Short []string
+	Type  OptionType
 }
 
 type OptionType int64

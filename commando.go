@@ -2,6 +2,7 @@ package commando
 
 import (
 	"fmt"
+
 	"github.com/devproje/commando/types"
 )
 
@@ -72,6 +73,10 @@ func (c *Commando) Execute() error {
 			}
 
 			handler = node.Handler
+			if handler == nil {
+				return fmt.Errorf("no command name: %s", cmd)
+			}
+
 			err = handler(node)
 			if err != nil {
 				return err

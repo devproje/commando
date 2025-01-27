@@ -4,7 +4,7 @@
 - Go 언어로 만든 간단한 Argument 파싱 & 핸들링 라이브러리 입니다!
 
 ## Milestone
-- Short option 기능 (ex: -a, -b 등등)
+~~- Short option 기능 (ex: -a, -b 등등)~~
 - Help Command 기능
 - 오류로그 개선
 
