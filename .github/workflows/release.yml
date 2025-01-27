@@ -18,9 +18,10 @@ jobs:
       with:
         go-version: 1.23.5
 
-    - name: Verify
+    - name: Verify and Test
       run: |
         go mod tidy
+        go test ./...
 
     - name: Publish Go Module
       env:
