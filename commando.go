@@ -2,25 +2,27 @@ package commando
 
 import (
 	"fmt"
+	"github.com/devproje/commando/types"
 )
 
 type Commando struct {
 	args  []string
 	nodes []Node
-	Must  bool
-	Help  bool
 }
+
+type Node struct {
+	Name     string
+	Desc     string
+	Commando *Commando
+	Handler  ArgHandler
+	SubNodes []Node
+	Opts     []types.OptionData
+}
+
+type ArgHandler func(n *Node) error
 
 func NewCommando(args []string) *Commando {
-	return &Commando{nodes: make([]Node, 0), args: args, Must: true, Help: true}
-}
-
-func (c *Commando) SetMust(value bool) {
-	c.Must = value
-}
-
-func (c *Commando) SetHelp(value bool) {
-	c.Help = value
+	return &Commando{nodes: make([]Node, 0), args: args}
 }
 
 func (c *Commando) Args() []string {
@@ -33,10 +35,6 @@ func (c *Commando) Nodes() []Node {
 
 func (c *Commando) Execute() error {
 	if len(c.args) == 0 {
-		if !c.Must {
-			return nil
-		}
-
 		return fmt.Errorf("no command specified")
 	}
 
@@ -88,6 +86,48 @@ func (c *Commando) Execute() error {
 	err = handler(node)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (c *Commando) Root(name, desc string, handler ArgHandler, options ...types.OptionData) {
+	c.nodes = append(c.nodes, Node{
+		Name:     name,
+		Desc:     desc,
+		Commando: c,
+		Handler:  handler,
+		SubNodes: nil,
+		Opts:     options,
+	})
+}
+
+func (c *Commando) ComplexRoot(name string, desc string, subNodes []Node, options ...types.OptionData) {
+	c.nodes = append(c.nodes, Node{
+		Name:     name,
+		Desc:     desc,
+		Commando: c,
+		SubNodes: subNodes,
+		Opts:     options,
+	})
+}
+
+func (c *Commando) Then(name string, desc string, handler ArgHandler, options ...types.OptionData) Node {
+	return Node{
+		Name:     name,
+		Desc:     desc,
+		Commando: c,
+		Handler:  handler,
+		SubNodes: nil,
+		Opts:     options,
+	}
+}
+
+func (n *Node) MustGetOpt(name string) *types.OptionData {
+	for _, opt := range n.Opts {
+		if opt.Name == name {
+			return &opt
+		}
 	}
 
 	return nil
